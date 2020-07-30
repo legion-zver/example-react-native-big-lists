@@ -32,6 +32,7 @@ export function* runGetTweets({payload: {reload}}: any) {
         const state = yield select();
         let {authToken, nextToken, query} = state.tweets || {};
         if (!authToken) {
+            // TODO: Зарегил приложение на портале Developers Twitter, но пока его не проверили ;-)
             authToken =
                 'AAAAAAAAAAAAAAAAAAAAAAs5%2FAAAAAAA%2BFhxtLDRr2AuKh5zdIHTczhg0Jg%3DltF0dqGzLFlmXH9wjI8HkO1gEzGlnCYUegwIOVVu1Umn8Yi1sX';
         }
