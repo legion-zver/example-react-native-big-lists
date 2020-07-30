@@ -10,6 +10,7 @@ export default StyleSheet.create({
     loadingText: {
         alignSelf: 'stretch',
         textAlign: 'center',
+        paddingTop: 2,
         opacity: 0.62,
         fontSize: 14,
         margin: 16,

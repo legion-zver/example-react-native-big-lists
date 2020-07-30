@@ -14,6 +14,7 @@ interface Props extends NavigationComponentProps {
     runGetTweets: (reload: boolean) => void;
     emptyNextToken: boolean;
     fetching: boolean;
+    net: boolean;
     ids: any[];
 }
 
@@ -44,7 +45,10 @@ class RecycleListScreen extends NavigationComponent<Props, State> {
     }
     layout = Dimensions.get('window');
     state: State = {
-        dataProvider: new DataProvider((r1, r2) => r1 !== r2),
+        dataProvider: new DataProvider(
+            (r1, r2) => r1 !== r2,
+            (index) => this.state.dataProvider.getDataForIndex(index),
+        ),
         layoutProvider: new LayoutProvider(
             () => 0,
             (type, dim) => {
@@ -69,11 +73,22 @@ class RecycleListScreen extends NavigationComponent<Props, State> {
         this.fetchData(true);
     }
 
+    componentDidUpdate(prevProps: Props, prevState: any, snapshot?: any) {
+        if (this.props.net && !prevProps.net) {
+            this.fetchData();
+        }
+    }
+
     rowRenderer = (type: string | number, id: string) => {
         return <TweetRow id={id} />;
     };
 
-    renderTextLoader = () => (this.props.fetching ? <Text style={styles.loadingText}>Загрузка...</Text> : null);
+    renderTextLoader = () =>
+        this.props.fetching || !this.props.net ? (
+            <Text style={styles.loadingText}>
+                {!this.props.net ? 'Ожидание интернет соединения...' : 'Загрузка...'}
+            </Text>
+        ) : null;
 
     render() {
         const count = this.state.dataProvider.getSize();
@@ -119,6 +134,7 @@ export default connect(
         emptyNextToken: !state.tweets.nextToken,
         fetching: state.tweets.fetching,
         ids: state.tweets.ids,
+        net: state.net,
     }),
     (dispatch) => ({
         runGetTweets: (reload: boolean) => dispatch(runGetTweets(reload)),

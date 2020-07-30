@@ -4,6 +4,7 @@ export const FLAT_LIST_SCREEN = 'app.FlatList';
 
 // Actions
 export const RUN_GET_TWEETS = 'sagas.runGetTweets';
+export const CHANGE_NET_STATUS = 'op.changeNetStatus';
 
 // Api actions
 export const API_AUTH_TWITTER = 'api.authTwitter';

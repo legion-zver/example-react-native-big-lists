@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {Image, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import * as Animatable from 'react-native-animatable';
+
 import {State as ReduxState} from '../../reducers';
 
 import styles from './styles';

@@ -13,6 +13,7 @@ interface Props extends NavigationComponentProps {
     runGetTweets: (reload: boolean) => void;
     emptyNextToken: boolean;
     fetching: boolean;
+    net: boolean;
     ids: any[];
 }
 
@@ -48,11 +49,19 @@ class FlatListScreen extends NavigationComponent<Props> {
                 },
             });
         }
+        if (this.props.net && !prevProps.net) {
+            this.fetchData();
+        }
     }
 
     renderItem = ({item: id}: any) => <TweetRow id={id} isRTL={true} />;
 
-    renderTextLoader = () => (this.props.fetching ? <Text style={styles.loadingText}>Загрузка...</Text> : null);
+    renderTextLoader = () =>
+        this.props.fetching || !this.props.net ? (
+            <Text style={styles.loadingText}>
+                {!this.props.net ? 'Ожидание интернет соединения...' : 'Загрузка...'}
+            </Text>
+        ) : null;
 
     render() {
         const {ids, emptyNextToken, fetching} = this.props;
@@ -90,6 +99,7 @@ export default connect(
         emptyNextToken: !state.tweets.nextToken,
         fetching: state.tweets.fetching,
         ids: state.tweets.ids,
+        net: state.net,
     }),
     (dispatch) => ({
         runGetTweets: (reload: boolean) => dispatch(runGetTweets(reload)),
