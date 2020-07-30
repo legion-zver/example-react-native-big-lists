@@ -1,6 +1,5 @@
 package com.reactnativebiglists;
 
-import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.reactnativenavigation.NavigationApplication;
@@ -8,7 +7,7 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.soloader.SoLoader;
+import com.facebook.react.modules.i18nmanager.I18nUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -44,7 +43,8 @@ public class MainApplication extends NavigationApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    
+    I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
+    sharedI18nUtilInstance.allowRTL(getApplicationContext(), true);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 

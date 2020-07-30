@@ -87,6 +87,11 @@ export function start() {
                             },
                         },
                     ],
+                    options: {
+                        bottomTabs: {
+                            titleDisplayMode: 'alwaysShow',
+                        },
+                    },
                 },
             },
         }).catch((error) => {

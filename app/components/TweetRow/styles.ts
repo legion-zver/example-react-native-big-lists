@@ -11,18 +11,15 @@ export default StyleSheet.create({
     },
     userInfo: {
         flexWrap: 'wrap',
-        direction: 'ltr',
         alignSelf: 'stretch',
         alignItems: 'center',
         flexDirection: 'row',
     },
     info: {
         flex: 1,
-        direction: 'ltr',
         flexDirection: 'column',
     },
     metrics: {
-        direction: 'ltr',
         flexDirection: 'row',
         alignItems: 'center',
         flexWrap: 'wrap',
@@ -51,7 +48,6 @@ export default StyleSheet.create({
     avatar: {
         width: 48,
         height: 48,
-        marginRight: 16,
         borderRadius: 16,
     },
     metricItem: {

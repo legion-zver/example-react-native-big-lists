@@ -1,8 +1,8 @@
-import React from 'react';
 import {connect} from 'react-redux';
+import React, {useEffect} from 'react';
 import * as Animatable from 'react-native-animatable';
-import {SafeAreaView, FlatList, Text, Dimensions} from 'react-native';
-import {NavigationComponentProps, NavigationComponent, Navigation} from 'react-native-navigation';
+import {SafeAreaView, FlatList, Text} from 'react-native';
+import {NavigationComponentProps, NavigationFunctionComponent, Navigation} from 'react-native-navigation';
 import {State as ReduxState} from '../../reducers';
 import {runGetTweets} from '../../actions';
 import {TweetRow} from '../../components';
@@ -17,82 +17,64 @@ interface Props extends NavigationComponentProps {
     ids: any[];
 }
 
-class FlatListScreen extends NavigationComponent<Props> {
-    componentDidMount() {
-        this.fetchData(true);
-    }
+const TextLoader = ({fetching, net}: any) =>
+    fetching || !net ? (
+        <Text style={styles.loadingText}>{!net ? 'Ожидание интернет соединения...' : 'Загрузка...'}</Text>
+    ) : null;
 
-    fetchData = (reload: boolean = false) => {
-        if (this.props.fetching) {
-            return;
-        }
-        this.props.runGetTweets(reload);
-    };
-
-    keyExtractor = (id: string) => id;
-
-    onEndReached = () => this.fetchData();
-
-    onRefresh = () => this.fetchData(true);
-
-    componentDidUpdate(prevProps: Props, prevState: any, snapshot?: any) {
-        if (this.props.ids !== prevProps.ids) {
-            Navigation.mergeOptions(this.props.componentId, {
-                topBar: {
-                    title: {
-                        color: 'rgba(25,25,25,1)',
-                    },
-                    subtitle: {
-                        text: this.props.ids.length > 0 ? `${this.props.ids.length} tweets` : undefined,
-                        color: 'rgba(25,25,25,0.62)',
-                    },
+const FlatListScreen: NavigationFunctionComponent<Props> = ({
+    net,
+    ids,
+    fetching,
+    componentId,
+    runGetTweets,
+    emptyNextToken,
+}: Props) => {
+    useEffect(() => {
+        Navigation.mergeOptions(componentId, {
+            topBar: {
+                title: {
+                    color: 'rgba(25,25,25,1)',
                 },
-            });
+                subtitle: {
+                    text: ids.length > 0 ? `${ids.length} tweets` : undefined,
+                    color: 'rgba(25,25,25,0.62)',
+                },
+            },
+        });
+    }, [ids]);
+    useEffect(() => {
+        if (net) {
+            runGetTweets(ids.length < 1);
         }
-        if (this.props.net && !prevProps.net) {
-            this.fetchData();
-        }
-    }
-
-    renderItem = ({item: id}: any) => <TweetRow id={id} isRTL={true} />;
-
-    renderTextLoader = () =>
-        this.props.fetching || !this.props.net ? (
-            <Text style={styles.loadingText}>
-                {!this.props.net ? 'Ожидание интернет соединения...' : 'Загрузка...'}
-            </Text>
-        ) : null;
-
-    render() {
-        const {ids, emptyNextToken, fetching} = this.props;
-        return (
-            <SafeAreaView style={styles.container}>
-                {ids.length > 0 ? (
-                    <Animatable.View useNativeDriver duration={600} animation="fadeInUp" style={styles.container}>
-                        <FlatList
-                            data={ids}
-                            style={styles.list}
-                            contentContainerStyle={{
-                                paddingVertical: 8,
-                            }}
-                            onEndReachedThreshold={2}
-                            onRefresh={this.onRefresh}
-                            renderItem={this.renderItem}
-                            removeClippedSubviews={true}
-                            directionalLockEnabled={true}
-                            keyExtractor={this.keyExtractor}
-                            onEndReached={this.onEndReached}
-                            refreshing={emptyNextToken && fetching}
-                            ListFooterComponent={this.renderTextLoader()}
-                        />
-                    </Animatable.View>
-                ) : (
-                    this.renderTextLoader()
-                )}
-            </SafeAreaView>
-        );
-    }
-}
+    }, [net]);
+    return (
+        <SafeAreaView style={styles.container}>
+            {ids.length > 0 ? (
+                <Animatable.View useNativeDriver duration={600} animation="fadeInUp" style={styles.container}>
+                    <FlatList
+                        data={ids}
+                        style={styles.list}
+                        contentContainerStyle={{
+                            paddingVertical: 8,
+                        }}
+                        onEndReachedThreshold={2}
+                        removeClippedSubviews={true}
+                        directionalLockEnabled={true}
+                        keyExtractor={(id: string) => id}
+                        onRefresh={() => runGetTweets(true)}
+                        refreshing={emptyNextToken && fetching}
+                        onEndReached={() => !fetching && runGetTweets(false)}
+                        ListFooterComponent={<TextLoader fetching={fetching} net={net} />}
+                        renderItem={({item: id}: any) => <TweetRow id={id} isRTL={true} />}
+                    />
+                </Animatable.View>
+            ) : (
+                <TextLoader fetching={fetching} net={net} />
+            )}
+        </SafeAreaView>
+    );
+};
 
 export default connect(
     (state: ReduxState) => ({

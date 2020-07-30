@@ -29,19 +29,20 @@ const MetricsItem = ({value, icon}: any) => (
 );
 
 const TweetRow = ({user, tweet, isRTL, numberOfLines}: InnerProps) => {
+    const avatar = user ? (
+        <Animatable.View useNativeDriver duration={400} animation={isRTL ? 'fadeInRight' : 'fadeInLeft'}>
+            <FastImage
+                resizeMode={FastImage.resizeMode.cover}
+                style={[styles.avatar, isRTL ? {marginLeft: 16} : {marginRight: 16}]}
+                source={{
+                    uri: user.profile_image_url,
+                }}
+            />
+        </Animatable.View>
+    ) : null;
     return (
-        <View style={[styles.container, {direction: isRTL ? 'rtl' : 'ltr'}]}>
-            {user ? (
-                <Animatable.View useNativeDriver duration={400} animation={isRTL ? 'fadeInRight' : 'fadeInLeft'}>
-                    <FastImage
-                        resizeMode={FastImage.resizeMode.cover}
-                        style={styles.avatar}
-                        source={{
-                            uri: user.profile_image_url,
-                        }}
-                    />
-                </Animatable.View>
-            ) : null}
+        <View style={styles.container}>
+            {!isRTL ? avatar : null}
             <View style={styles.info}>
                 {user ? (
                     <View style={styles.userInfo}>
@@ -70,6 +71,7 @@ const TweetRow = ({user, tweet, isRTL, numberOfLines}: InnerProps) => {
                     />
                 </View>
             </View>
+            {isRTL ? avatar : null}
         </View>
     );
 };
