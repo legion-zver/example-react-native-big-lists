@@ -26,12 +26,20 @@ export function start() {
                                     {
                                         component: {
                                             name: RECYCLE_LIST_VIEW_SCREEN,
+                                            options: {
+                                                topBar: {
+                                                    title: {
+                                                        text: 'RecycleListView',
+                                                    },
+                                                },
+                                            },
                                         },
                                     },
                                 ],
                                 options: {
                                     bottomTab: {
                                         icon: require('./assets/list-outline.png'),
+                                        selectedIconColor: '#0062d9',
                                         text: 'RecycleListView',
                                     },
                                 },
@@ -43,12 +51,20 @@ export function start() {
                                     {
                                         component: {
                                             name: FLAT_LIST_SCREEN,
+                                            options: {
+                                                topBar: {
+                                                    title: {
+                                                        text: 'FlatList',
+                                                    },
+                                                },
+                                            },
                                         },
                                     },
                                 ],
                                 options: {
                                     bottomTab: {
                                         icon: require('./assets/list-outline.png'),
+                                        selectedIconColor: '#0062d9',
                                         text: 'FlatList',
                                     },
                                 },
