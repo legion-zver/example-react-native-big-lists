@@ -1,6 +1,6 @@
 // noinspection SpellCheckingInspection
 import axios, {AxiosResponse} from 'axios';
-import {takeEvery, select, put, call, all} from 'redux-saga/effects';
+import {takeLatest, select, put, call, all} from 'redux-saga/effects';
 import {RUN_GET_TWEETS, API_GET_TWEETS, _FAIL, _SUCCESS} from '../constants';
 
 function fetchTweets({query, authToken, nextToken}: any) {
@@ -20,7 +20,7 @@ function fetchTweets({query, authToken, nextToken}: any) {
             },
         })
         .then((res: AxiosResponse) => {
-            if ('data' in (res.data || {})) {
+            if (res.data?.data) {
                 return Promise.resolve(res.data);
             }
             return Promise.reject(res.data);
@@ -32,7 +32,7 @@ export function* runGetTweets({payload: {reload}}: any) {
         const state = yield select();
         let {authToken, nextToken, query} = state.tweets || {};
         if (!authToken) {
-            // TODO: Зарегил приложение на портале Developers Twitter, но пока его не проверили ;-)
+            // TODO: Зарегал приложение на портале Developers Twitter, но пока его не проверили ;-)
             authToken =
                 'AAAAAAAAAAAAAAAAAAAAAAs5%2FAAAAAAA%2BFhxtLDRr2AuKh5zdIHTczhg0Jg%3DltF0dqGzLFlmXH9wjI8HkO1gEzGlnCYUegwIOVVu1Umn8Yi1sX';
         }
@@ -44,5 +44,5 @@ export function* runGetTweets({payload: {reload}}: any) {
 }
 
 export default function* () {
-    yield all([takeEvery(RUN_GET_TWEETS, runGetTweets)]);
+    yield all([takeLatest(RUN_GET_TWEETS, runGetTweets)]);
 }

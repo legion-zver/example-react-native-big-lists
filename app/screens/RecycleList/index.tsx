@@ -114,6 +114,7 @@ class RecycleListScreen extends NavigationComponent<Props, State> {
                             }}
                             rowRenderer={this.rowRenderer}
                             onEndReached={this.onEndReached}
+                            optimizeForInsertDeleteAnimations
                             renderFooter={this.renderTextLoader}
                             forceNonDeterministicRendering={true}
                             dataProvider={this.state.dataProvider}

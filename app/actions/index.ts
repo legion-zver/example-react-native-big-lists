@@ -1,5 +1,6 @@
 import {runGetTweets} from './tweets';
 import {changeNetStatus} from './net';
+import {changeSearchQuery} from './search';
 
 // Export all
-export {runGetTweets, changeNetStatus};
+export {changeSearchQuery, runGetTweets, changeNetStatus};

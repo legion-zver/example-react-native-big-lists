@@ -4,7 +4,7 @@ import {Store, createStore, applyMiddleware} from 'redux';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {composeWithDevTools} from 'redux-devtools-extension/logOnlyInProduction';
 
-import {FLAT_LIST_SCREEN, RECYCLE_LIST_VIEW_SCREEN} from './constants';
+import {AUTO_COMPLETE_SCREEN, FLAT_LIST_SCREEN, RECYCLE_LIST_VIEW_SCREEN} from './constants';
 import {changeNetStatus} from './actions';
 import {registerScreens} from './screens';
 import reducer from './reducers';
@@ -82,6 +82,31 @@ export function start() {
                                         icon: require('./assets/list-outline.png'),
                                         selectedIconColor: '#0062d9',
                                         text: 'FlatList',
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            stack: {
+                                children: [
+                                    {
+                                        component: {
+                                            name: AUTO_COMPLETE_SCREEN,
+                                            options: {
+                                                topBar: {
+                                                    title: {
+                                                        text: 'Search products',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                ],
+                                options: {
+                                    bottomTab: {
+                                        icon: require('./assets/search-outline.png'),
+                                        selectedIconColor: '#0062d9',
+                                        text: 'Search',
                                     },
                                 },
                             },
